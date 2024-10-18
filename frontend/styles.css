@@ -1,0 +1,86 @@
+@import url("https://fonts.googleapis.com/css2?family=Afacad:ital,wght@0,400..700;1,400..700&display=swap");
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body,
+html {
+    height: 100%;
+    font-family: "Afacad", Arial, Helvetica, sans-serif;
+}
+
+.container {
+    display: flex;
+    height: 100vh;
+    position: relative;
+}
+
+.left-bar {
+    background-color: #e74c3c;
+    width: 60px;
+    position: relative;
+}
+
+.top-bar {
+    background-color: #154360;
+    height: 60px;
+    width: 100%;
+}
+
+.main-content {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-grow: 1;
+    background-color: #fdf6f0;
+    padding: 60px;
+    z-index: 1;
+}
+
+.header {
+    background-color: #4a148c;
+    height: 60px;
+    width: calc(100% - 60px);
+    position: absolute;
+    top: 0;
+    left: 60px;
+    z-index: 2;
+}
+.connect-container {
+    height: 300px;
+    width: 300px;
+    background: rgba(71, 24, 120, 0.35);
+    border: solid 1px #4a148c;
+    border-radius: 10px;
+    padding: 20px;
+}
+
+.logo-container {
+    height: 20px;
+    width: auto;
+    padding: 10px;
+}
+svg {
+    /* padding: 10px; */
+    height: 80px;
+    width: auto;
+}
+
+p {
+    color: #154360;
+    font-size: 24px;
+}
+button {
+    width: 150px;
+    height: 40px;
+    border-radius: 5px;
+    border: none;
+    color: white;
+    font-family: "Afacad", Arial, Helvetica, sans-serif;
+    font-size: 16px;
+    background-color: #e55950;
+    cursor: pointer;
+}

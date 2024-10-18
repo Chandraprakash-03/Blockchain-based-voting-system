@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Vote | Vote Rigt</title>
+        <style>
+            @import url("https://fonts.googleapis.com/css2?family=Afacad:ital,wght@0,400..700;1,400..700&display=swap");
+
+            * {
+                margin: 0;
+                padding: 0;
+                box-sizing: border-box;
+            }
+
+            body,
+            html {
+                height: 100%;
+                font-family: "Afacad", Arial, Helvetica, sans-serif;
+            }
+
+            .container {
+                display: flex;
+                height: 100vh;
+                position: relative;
+            }
+
+            .left-bar {
+                background-color: #e74c3c;
+                width: 60px;
+                position: relative;
+            }
+
+            .top-bar {
+                background-color: #154360;
+                height: 60px;
+                width: 100%;
+            }
+
+            .main-content {
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                flex-grow: 1;
+                background-color: #fdf6f0;
+                padding: 60px;
+                z-index: 1;
+            }
+
+            .header {
+                background-color: #4a148c;
+                height: 60px;
+                width: calc(100% - 60px);
+                position: absolute;
+                top: 0;
+                left: 60px;
+                z-index: 2;
+            }
+            .logo-container {
+                position: absolute;
+                top: 60px;
+                left: 60px;
+                padding: 10px;
+            }
+            .timer-container {
+                position: absolute;
+                margin: -40px;
+                top: 120px; /* Slightly inward from the top */
+                right: 120px; /* Slightly inward from the left */
+            }
+            .timer-circle {
+                width: 70px;
+                height: 70px;
+                background-color: rgba(229, 89, 80, 0.35);
+                border-radius: 50%; /* Make it a circle */
+                border: #4a148c 1px solid;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                font-size: 18px;
+                color: black;
+                font-weight: bold;
+            }
+            .proposal-container {
+                display: flex;
+                height: 400px;
+                width: 400px;
+                background-color: rgba(71, 24, 120, 0.35);
+                border: solid 1px #4a148c;
+                border-radius: 10px;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="container">
+            <div class="left-bar">
+                <div class="top-bar"></div>
+            </div>
+            <div class="main-content">
+                <div class="logo-container">
+                    <img
+                        src="../frontend/dependencies/logo.svg"
+                        alt="Vote Right Logo"
+                        width="80"
+                    />
+                </div>
+                <div class="timer-container">
+                    <div class="timer-circle">
+                        <span id="timer">90:00</span>
+                    </div>
+                </div>
+                <div class="proposal-container"></div>
+            </div>
+            <div class="header"></div>
+        </div>
+    </body>
+    <!-- <script>
+        function startTimer(duration, display) {
+            let timer = duration,
+                minutes,
+                seconds
+            setInterval(function () {
+                minutes = parseInt(timer / 60, 10)
+                seconds = parseInt(timer % 60, 10)
+
+                minutes = minutes < 10 ? "0" + minutes : minutes
+                seconds = seconds < 10 ? "0" + seconds : seconds
+
+                display.textContent = minutes + ":" + seconds
+
+                if (--timer < 0) {
+                    timer = 0
+                }
+            }, 1000)
+        }
+
+        window.onload = function () {
+            let ninetyMinutes = 60 * 90, // 90 minutes in seconds
+                display = document.querySelector("#timer")
+            startTimer(ninetyMinutes, display)
+        }
+    </script> -->
+</html>
