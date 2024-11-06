@@ -1,143 +1,369 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <meta charset="UTF-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>Vote | Vote Rigt</title>
-        <style>
-            @import url("https://fonts.googleapis.com/css2?family=Afacad:ital,wght@0,400..700;1,400..700&display=swap");
 
-            * {
-                margin: 0;
-                padding: 0;
-                box-sizing: border-box;
-            }
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Vote | Vote Right</title>
+    <!-- Add ethers.js -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/ethers/5.7.2/ethers.umd.min.js"></script>
+    <style>
+        @import url("https://fonts.googleapis.com/css2?family=Afacad:ital,wght@0,400..700;1,400..700&display=swap");
 
-            body,
-            html {
-                height: 100%;
-                font-family: "Afacad", Arial, Helvetica, sans-serif;
-            }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
-            .container {
-                display: flex;
-                height: 100vh;
-                position: relative;
-            }
+        body,
+        html {
+            height: 100%;
+            font-family: "Afacad", Arial, Helvetica, sans-serif;
+            color: #000;
+        }
 
-            .left-bar {
-                background-color: #e74c3c;
-                width: 60px;
-                position: relative;
-            }
+        .container {
+            display: flex;
+            height: 100vh;
+            position: relative;
+        }
 
-            .top-bar {
-                background-color: #154360;
-                height: 60px;
-                width: 100%;
-            }
+        .left-bar {
+            background-color: #e74c3c;
+            width: 60px;
+            position: relative;
+        }
 
-            .main-content {
-                display: flex;
-                justify-content: center;
-                align-items: center;
-                flex-grow: 1;
-                background-color: #fdf6f0;
-                padding: 60px;
-                z-index: 1;
-            }
+        .top-bar {
+            background-color: #154360;
+            height: 60px;
+            width: 100%;
+        }
 
-            .header {
-                background-color: #4a148c;
-                height: 60px;
-                width: calc(100% - 60px);
-                position: absolute;
-                top: 0;
-                left: 60px;
-                z-index: 2;
-            }
-            .logo-container {
-                position: absolute;
-                top: 60px;
-                left: 60px;
-                padding: 10px;
-            }
-            .timer-container {
-                position: absolute;
-                margin: -40px;
-                top: 120px; /* Slightly inward from the top */
-                right: 120px; /* Slightly inward from the left */
-            }
-            .timer-circle {
-                width: 70px;
-                height: 70px;
-                background-color: rgba(229, 89, 80, 0.35);
-                border-radius: 50%; /* Make it a circle */
-                border: #4a148c 1px solid;
-                display: flex;
-                justify-content: center;
-                align-items: center;
-                font-size: 18px;
-                color: black;
-                font-weight: bold;
-            }
-            .proposal-container {
-                display: flex;
-                height: 400px;
-                width: 400px;
-                background-color: rgba(71, 24, 120, 0.35);
-                border: solid 1px #4a148c;
-                border-radius: 10px;
-            }
-        </style>
-    </head>
-    <body>
-        <div class="container">
-            <div class="left-bar">
-                <div class="top-bar"></div>
-            </div>
-            <div class="main-content">
-                <div class="logo-container">
-                    <img
-                        src="../frontend/dependencies/logo.svg"
-                        alt="Vote Right Logo"
-                        width="80"
-                    />
-                </div>
-                <div class="timer-container">
-                    <div class="timer-circle">
-                        <span id="timer">90:00</span>
-                    </div>
-                </div>
-                <div class="proposal-container"></div>
-            </div>
-            <div class="header"></div>
+        .main-content {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-grow: 1;
+
+            background-color: #fdf6f0;
+            padding: 60px;
+            z-index: 1;
+        }
+
+        .header {
+            background-color: #4a148c;
+            height: 60px;
+            width: calc(100% - 60px);
+            position: absolute;
+            top: 0;
+            left: 60px;
+            z-index: 2;
+        }
+
+        .logo-container {
+            position: absolute;
+            top: 60px;
+            left: 60px;
+            padding: 10px;
+        }
+
+        .timer-container {
+            position: absolute;
+            margin: -40px;
+            top: 120px;
+            right: 120px;
+        }
+
+        .timer-circle {
+            width: 70px;
+            height: 70px;
+            background-color: rgba(229, 89, 80, 0.35);
+            border-radius: 50%;
+            border: #4a148c 1px solid;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 18px;
+            color: black;
+            font-weight: bold;
+        }
+
+        .proposal-container {
+            display: flex;
+            flex-direction: column;
+            height: 400px;
+            width: 400px;
+            background-color: rgba(71, 24, 120, 0.35);
+            border: solid 1px #4a148c;
+            border-radius: 10px;
+            padding: 20px;
+        }
+
+        .proposal-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: rgba(71, 24, 120, 0.35);
+            padding: 10px 15px;
+            margin: 10px 0 10px 0;
+            border: solid 1px #4a148c;
+            border-radius: 5px;
+            flex: 1;
+        }
+
+        .proposal-name {
+            font-size: 18px;
+            font-weight: 500;
+        }
+
+        .vote-button {
+            padding: 8px 20px;
+            background-color: #e74c3c;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-family: "Afacad", Arial, Helvetica, sans-serif;
+            font-weight: 500;
+        }
+
+        .vote-button:hover {
+            background-color: #c0392b;
+        }
+
+        .vote-button:disabled {
+            background-color: #cccccc;
+            cursor: not-allowed;
+        }
+
+        #status {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 500px;
+            padding: 10px 20px;
+            border-radius: 5px;
+            display: none;
+            z-index: 10;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.3);
+        }
+
+        .success {
+            background-color: #4CAF50;
+            color: white;
+        }
+
+        .error {
+            background-color: #f44336;
+            color: white;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="left-bar">
+            <div class="top-bar"></div>
         </div>
-    </body>
-    <!-- <script>
-        function startTimer(duration, display) {
-            let timer = duration,
-                minutes,
-                seconds
-            setInterval(function () {
-                minutes = parseInt(timer / 60, 10)
-                seconds = parseInt(timer % 60, 10)
+        <div class="main-content">
+            <div class="logo-container">
+                <img src="../frontend/dependencies/logo.svg" alt="Vote Right Logo" width="80" />
+            </div>
+            <div class="timer-container">
+                <div class="timer-circle">
+                    <span id="timer">90:00</span>
+                </div>
+            </div>
+            <div class="proposal-container">
+                <div class="proposal-item">
+                    <span class="proposal-name">Proposal 1</span>
+                    <button class="vote-button" data-proposal-id="0">Vote</button>
+                </div>
+                <div class="proposal-item">
+                    <span class="proposal-name">Proposal 2</span>
+                    <button class="vote-button" data-proposal-id="1">Vote</button>
+                </div>
+                <div class="proposal-item">
+                    <span class="proposal-name">Proposal 3</span>
+                    <button class="vote-button" data-proposal-id="2">Vote</button>
+                </div>
+                <div class="proposal-item">
+                    <span class="proposal-name">Proposal 4</span>
+                    <button class="vote-button" data-proposal-id="3">Vote</button>
+                </div>
+            </div>
+        </div>
+        <div class="header"></div>
+    </div>
+    <div id="status"></div>
 
-                minutes = minutes < 10 ? "0" + minutes : minutes
-                seconds = seconds < 10 ? "0" + seconds : seconds
+    <script>
+        // Contract details
+        const contractAddress = "0x7d2e55afdcf9d9a93091436aa4aa200224673a14";
+        const abi = [
+            {
+                inputs: [{ internalType: "string[]", name: "proposalNames", type: "string[]" }],
+                stateMutability: "nonpayable",
+                type: "constructor"
+            },
+            {
+                inputs: [],
+                name: "chairperson",
+                outputs: [{ internalType: "address", name: "", type: "address" }],
+                stateMutability: "view",
+                type: "function"
+            },
+            {
+                inputs: [{ internalType: "address", name: "to", type: "address" }],
+                name: "delegate",
+                outputs: [],
+                stateMutability: "nonpayable",
+                type: "function"
+            },
+            {
+                inputs: [{ internalType: "address", name: "voter", type: "address" }],
+                name: "giveRightToVote",
+                outputs: [],
+                stateMutability: "nonpayable",
+                type: "function"
+            },
+            {
+                inputs: [{ internalType: "uint256", name: "", type: "uint256" }],
+                name: "proposals",
+                outputs: [
+                    { internalType: "string", name: "name", type: "string" },
+                    { internalType: "uint256", name: "voteCount", type: "uint256" }
+                ],
+                stateMutability: "view",
+                type: "function"
+            },
+            {
+                inputs: [{ internalType: "uint256", name: "proposal", type: "uint256" }],
+                name: "vote",
+                outputs: [],
+                stateMutability: "nonpayable",
+                type: "function"
+            }
+        ];
 
-                display.textContent = minutes + ":" + seconds
+        let contract;
+        let signer;
+
+        // Show status message
+        function showStatus(message, isError = false) {
+            const statusDiv = document.getElementById('status');
+            statusDiv.textContent = message;
+            statusDiv.className = isError ? 'error' : 'success';
+            statusDiv.style.display = 'block';
+
+            // Hide after 3 seconds
+            setTimeout(() => {
+                statusDiv.style.display = 'none';
+            }, 50000);
+        }
+
+        // Initialize contract
+        async function initializeContract() {
+            if (typeof window.ethereum !== 'undefined') {
+                try {
+                    // Check if user is connected
+                    const connectedAccount = localStorage.getItem('connectedAccount');
+                    if (!connectedAccount) {
+                        window.location.href = 'connect.html';
+                        return;
+                    }
+
+                    // Create provider and signer
+                    const provider = new ethers.providers.Web3Provider(window.ethereum);
+                    signer = await provider.getSigner();
+
+                    // Create contract instance
+                    contract = new ethers.Contract(contractAddress, abi, signer);
+
+                    // Initialize UI
+                    await initializeProposals();
+                    startTimer(90 * 60); // 90 minutes
+
+                } catch (error) {
+                    console.error('Error initializing contract:', error);
+                    showStatus('Error initializing contract', true);
+                }
+            } else {
+                showStatus('Please install MetaMask!', true);
+            }
+        }
+
+        // Initialize proposals
+        async function initializeProposals() {
+            const buttons = document.querySelectorAll('.vote-button');
+            buttons.forEach(button => {
+                button.addEventListener('click', async () => {
+                    const proposalId = button.getAttribute('data-proposal-id');
+                    await vote(proposalId);
+                });
+            });
+        }
+
+        // Vote function
+        async function vote(proposalId) {
+            try {
+                const tx = await contract.vote(proposalId);
+                showStatus('Voting in progress...');
+                await tx.wait();
+                showStatus('Vote cast successfully!');
+
+                // Disable the button after successful vote
+                const button = document.querySelector(`button[data-proposal-id="${proposalId}"]`);
+                button.disabled = true;
+                button.textContent = 'Voted';
+            } catch (error) {
+                console.error('Error voting:', error);
+                showStatus('Error casting vote: ' + error.message, true);
+            }
+        }
+
+        // Timer function
+        function startTimer(duration) {
+            let timer = duration;
+            const display = document.querySelector('#timer');
+
+            const interval = setInterval(() => {
+                const minutes = parseInt(timer / 60, 10);
+                const seconds = parseInt(timer % 60, 10);
+
+                display.textContent = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
 
                 if (--timer < 0) {
-                    timer = 0
+                    clearInterval(interval);
+                    display.textContent = "00:00";
+                    // Disable all vote buttons when timer expires
+                    const voteButtons = document.querySelectorAll('.vote-button');
+                    voteButtons.forEach(button => {
+                        button.disabled = true;
+                        button.textContent = 'Ended';
+                    });
                 }
-            }, 1000)
+            }, 1000);
         }
 
-        window.onload = function () {
-            let ninetyMinutes = 60 * 90, // 90 minutes in seconds
-                display = document.querySelector("#timer")
-            startTimer(ninetyMinutes, display)
+        // Initialize when page loads
+        document.addEventListener('DOMContentLoaded', initializeContract);
+
+        // Handle account changes
+        if (window.ethereum) {
+            window.ethereum.on('accountsChanged', (accounts) => {
+                if (accounts.length === 0) {
+                    localStorage.removeItem('connectedAccount');
+                    window.location.href = 'index.html';
+                } else {
+                    localStorage.setItem('connectedAccount', accounts[0]);
+                    initializeContract();
+                }
+            });
         }
-    </script> -->
+    </script>
+</body>
+
 </html>

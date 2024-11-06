@@ -13,7 +13,7 @@ describe("Ballot", function () {
     )
     beforeEach(async function () {
         ;[owner, addr1, addr2] = await ethers.getSigners()
-        const Ballot = await ethers.getContractFactory("3_Ballot")
+        const Ballot = await ethers.getContractFactory("Ballot")
         ballot = await Ballot.deploy(proposalNames)
     })
     it("Should set the right chairperson", async function () {

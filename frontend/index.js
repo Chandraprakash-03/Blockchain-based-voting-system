@@ -1,77 +1,79 @@
-import { ethers } from "../frontend/dependencies/ethers.min.js"
-import { abi, contractAddress } from "../frontend/dependencies/constants.js"
+import { ethers } from "../frontend/dependencies/ethers.min.js";
+import { abi, contractAddress } from "../frontend/dependencies/constants.js";
 
-let connectButton = document.getElementById("connectButton")
-let initializeButton = document.getElementById("initialize")
-let voteButton1 = document.getElementById("voteButton1")
-connectButton.onclick = connectMetaMask
-initializeButton.onclick = getWinner
+console.log("index.js loaded");
 
-// async function connect() {
-//     if (typeof window.ethereum !== undefined) {
-//         try {
-//             await window.ethereum.request({
-//                 method: "eth_requestAccounts",
-//             })
-//         } catch (error) {
-//             console.error(error)
-//         }
-//         connectButton.innerHTML = "Connected"
-//         console.log("Connected")
-//         console.log(window.ethereum.accounts)
-//     } else {
-//         connectButton.innerHTML = "Not Connected"
-//     }
-// }
+// Connect to MetaMask
 async function connectMetaMask() {
     try {
-        // Request account access if needed
-        const accounts = await ethereum.request({
-            method: "eth_requestAccounts",
-        })
+        if (typeof window.ethereum === 'undefined') {
+            alert('Please install MetaMask to use this feature!');
+            return;
+        }
 
-        // Fetch the first account (if multiple accounts, you get the first one in the array)
-        const account = accounts[0]
-        console.log("Connected account:", account)
+        // Request account access
+        const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
+        if (accounts.length === 0) {
+            alert('No accounts found. Please check your MetaMask settings.');
+            return;
+        }
+
+        const account = accounts[0];
+        console.log('Connected account:', account);
+
+        // Store the account in localStorage to retrieve it on other pages
+        localStorage.setItem('connectedAccount', account);
+
+        // Redirect to vote page after successful connection
+        window.location.href = 'vote.html';
     } catch (error) {
-        console.error("Error connecting to MetaMask:", error)
+        console.error('Error connecting to MetaMask:', error);
+        alert('Failed to connect to MetaMask. Please try again. Error: ' + error.message);
     }
 }
 
 async function getWinner() {
     try {
-        const provider = new ethers.BrowserProvider(window.ethereum)
-        const signer = await provider.getSigner()
-        const contract = new ethers.Contract(contractAddress, abi, signer)
-        const winner = await contract.winnerName()
-        console.log("Current winner", winner.toString())
+        const provider = new ethers.BrowserProvider(window.ethereum);
+        const signer = await provider.getSigner();
+        const contract = new ethers.Contract(contractAddress, abi, signer);
+
+        const winner = await contract.winnerName();
+        console.log("Current winner:", winner.toString());
     } catch (error) {
-        console.error("Error initializing Contract", error)
+        console.error("Error getting the winner:", error);
+        alert("Failed to retrieve the winner. Please try again. Error: " + error.message);
     }
 }
 
-async function vote(proposalIndex) {
-    const provider = new ethers.BrowserProvider(window.ethereum)
-    const signer = await provider.getSigner()
-    const contract = new ethers.Contract(contractAddress, abi, signer)
+async function vote(proposalId) {
     try {
-        if (!provider || !signer || !contract) {
-            console.log("Contract not initialized")
-            return
-        }
-        const confirmation = confirm(
-            "Are you sure you want to vote this candidate"
-        )
-        if (!confirmation) {
-            return
+        if (!window.ethereum) {
+            alert("MetaMask is not installed!");
+            return;
         }
 
-        const voteTx = await contract.vote(proposalIndex)
-        alert("awaiting for confirmation...")
+        const provider = new ethers.BrowserProvider(window.ethereum);
+        const signer = await provider.getSigner();
+        const contract = new ethers.Contract(contractAddress, abi, signer);
 
-        await voteTx.wait()
-        alert("Vote casted successfully")
+        // Validate proposalId
+        const proposalsCount = await contract.proposalsCount(); // Assuming you have a function to get proposals count
+        if (proposalId < 0 || proposalId >= proposalsCount) {
+            throw new Error("Invalid proposal ID.");
+        }
+
+        const transaction = await contract.vote(proposalId);
+        console.log("Transaction sent:", transaction);
+
+        const receipt = await transaction.wait();
+        console.log("Transaction mined:", receipt);
+
+        alert(`Vote successful for proposal ${proposalId}!`);
     } catch (error) {
-        console.error(error)
+        console.error("Error during voting:", error);
+        alert("An error occurred during voting. Please try again. Error: " + error.message);
     }
 }
+
+export { connectMetaMask, vote, getWinner };
