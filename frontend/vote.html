@@ -5,6 +5,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Vote | Vote Right</title>
+    <link rel="shortcut icon" href="dependencies/logo.png" type="image/x-icon">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/ethers/5.7.2/ethers.umd.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/ethereum-blockies@0.1.1/blockies.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Afacad:ital,wght@0,400..700;1,400..700&display=swap"
@@ -104,7 +105,7 @@
             position: absolute;
             margin: -40px;
             top: 120px;
-            right: 120px;
+            right: 200px;
         }
 
         .timer-circle {
@@ -212,6 +213,183 @@
             font-weight: 500;
             color: #e74c3c;
         }
+
+        .overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.8);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .overlay-content {
+            background-color: white;
+            padding: 40px;
+            border-radius: 15px;
+            text-align: center;
+            max-width: 500px;
+            width: 90%;
+            position: relative;
+            animation: slideIn 0.5s ease-out;
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateY(-100px);
+                opacity: 0;
+            }
+
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .overlay-content h2 {
+            color: #4a148c;
+            margin-bottom: 20px;
+            font-size: 28px;
+        }
+
+        .winner-name {
+            color: #e74c3c;
+            font-size: 36px;
+            font-weight: bold;
+            margin: 20px 0;
+        }
+
+        .voting-ended-msg {
+            font-size: 18px;
+            color: #666;
+            margin-bottom: 20px;
+        }
+
+        .close-overlay {
+            padding: 10px 25px;
+            background-color: #4a148c;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s;
+        }
+
+        .close-overlay:hover {
+            background-color: #311b92;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            font-size: 14px;
+            color: white;
+            z-index: 10;
+            background-color: rgba(255, 255, 255, 0.1);
+            padding: 5px 10px;
+            border-radius: 20px;
+            backdrop-filter: blur(5px);
+        }
+
+        .chairperson-badge {
+            background-color: #e74c3c;
+            color: white;
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-size: 12px;
+            margin-left: 10px;
+        }
+
+        .admin-panel {
+            position: fixed;
+            top: 80px;
+            /* Positioned below the header */
+            right: 20px;
+            background-color: rgba(74, 20, 140, 0.95);
+            /* Made slightly more opaque */
+            padding: 25px;
+            border-radius: 10px;
+            color: white;
+            display: none;
+            /* Hidden by default */
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+            width: 300px;
+            /* Fixed width */
+            z-index: 100;
+            /* Ensure it's above other content */
+        }
+
+        .admin-panel h3 {
+            margin-bottom: 15px;
+            font-size: 20px;
+            color: #fff;
+            text-align: center;
+            font-weight: bold;
+        }
+
+        .admin-controls {
+            background-color: rgba(255, 255, 255, 0.1);
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 10px;
+        }
+
+        .admin-panel input {
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 15px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 6px;
+            background-color: rgba(255, 255, 255, 0.9);
+            color: #333;
+            font-size: 14px;
+        }
+
+        .admin-panel input::placeholder {
+            color: #666;
+        }
+
+        .admin-panel button {
+            background-color: #e74c3c;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            width: 100%;
+            font-size: 16px;
+            font-weight: bold;
+            transition: background-color 0.3s ease;
+        }
+
+        .admin-panel button:hover {
+            background-color: #c0392b;
+        }
+
+        .admin-toggle {
+            position: fixed;
+            top: 80px;
+            right: 10px;
+            background-color: #e74c3c;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            display: none;
+            /* Hidden by default */
+            z-index: 99;
+            border: none;
+            font-weight: bold;
+        }
+
+        .admin-toggle:hover {
+            background-color: #c0392b;
+        }
     </style>
 </head>
 
@@ -220,11 +398,34 @@
         <div class="left-bar">
             <div class="top-bar"></div>
         </div>
+        <button id="adminToggle" class="admin-toggle" onclick="toggleAdminPanel()">
+            Admin Panel
+        </button>
+        <div id="adminPanel" class="admin-panel">
+            <h3>Chairperson Controls</h3>
+            <div class="admin-controls">
+                <input type="text" id="voterAddress" placeholder="Enter voter address (0x...)"
+                    title="Enter a valid Ethereum address" />
+                <button onclick="giveRightToVote()">Give Right to Vote</button>
+            </div>
+        </div>
+        <div id="votingEndedOverlay" class="overlay">
+            <div class="overlay-content">
+                <h2>Voting Has Ended!</h2>
+                <p class="voting-ended-msg">The final results are in...</p>
+                <p>The winner is:</p>
+                <div class="winner-name" id="overlayWinnerName">...</div>
+                <button class="close-overlay" onclick="closeOverlay()">Close</button>
+            </div>
+        </div>
+
+        <div id="status"></div>
         <div class="main-content">
             <div class="header">
                 <div class="user-info" id="user-info">
                     <canvas id="blocky-icon" width="30" height="30"></canvas>
                     <span id="user-address"></span>
+                    <span id="chairperson-badge" class="chairperson-badge" style="display: none">Chairperson</span>
                 </div>
             </div>
 
@@ -238,19 +439,19 @@
             </div>
             <div class="proposal-container">
                 <div class="proposal-item">
-                    <span class="proposal-name">Proposal 1</span>
+                    <span class="proposal-name">Chandraprakash</span>
                     <button class="vote-button" data-proposal-id="0">Vote</button>
                 </div>
                 <div class="proposal-item">
-                    <span class="proposal-name">Proposal 2</span>
+                    <span class="proposal-name">Dhanush</span>
                     <button class="vote-button" data-proposal-id="1">Vote</button>
                 </div>
                 <div class="proposal-item">
-                    <span class="proposal-name">Proposal 3</span>
+                    <span class="proposal-name">Aakash</span>
                     <button class="vote-button" data-proposal-id="2">Vote</button>
                 </div>
                 <div class="proposal-item">
-                    <span class="proposal-name">Proposal 4</span>
+                    <span class="proposal-name">Kishore</span>
                     <button class="vote-button" data-proposal-id="3">Vote</button>
                 </div><br><br><br><br>
                 <div class="winner-container">
@@ -264,7 +465,7 @@
     <div id="status"></div>
 
     <script>
-        // Contract configuration
+
         const contractAddress = "0x7d2e55afdcf9d9a93091436aa4aa200224673a14";
         const abi = [
             {
@@ -418,8 +619,8 @@
 
         let contract;
         let signer;
+        let isChairperson = false;
 
-        // Status message handler
         function showStatus(message, isError = false) {
             const statusDiv = document.getElementById('status');
             statusDiv.textContent = message;
@@ -430,9 +631,12 @@
                 statusDiv.style.display = 'none';
             }, 5000);
         }
+        function toggleAdminPanel() {
+            const panel = document.getElementById('adminPanel');
+            panel.style.display = panel.style.display === 'none' ? 'block' : 'none';
+        }
 
-        // Display user information
-        const displayUserInfo = (address) => {
+        const displayUserInfo = async (address) => {
             const userAddressSpan = document.getElementById('user-address');
             const blockyIconCanvas = document.getElementById('blocky-icon');
 
@@ -449,31 +653,85 @@
             context.clearRect(0, 0, blockyIconCanvas.width, blockyIconCanvas.height);
             context.drawImage(icon, 0, 0);
         }
+        async function checkIfChairperson() {
+            try {
+                const chairpersonAddress = await contract.chairperson();
+                const currentUser = await signer.getAddress();
 
-        // Initialize contract and UI
+                isChairperson = chairpersonAddress.toLowerCase() === currentUser.toLowerCase();
+
+                // Show/hide chairperson badge and admin toggle button
+                document.getElementById('chairperson-badge').style.display = isChairperson ? 'inline' : 'none';
+                document.getElementById('adminToggle').style.display = isChairperson ? 'block' : 'none';
+
+                // If user is not chairperson, ensure admin panel is hidden
+                if (!isChairperson) {
+                    document.getElementById('adminPanel').style.display = 'none';
+                }
+
+                console.log('Is Chairperson:', isChairperson);
+            } catch (error) {
+                console.error('Error checking chairperson:', error);
+                showStatus('Error checking chairperson status', true);
+            }
+        }
+        async function giveRightToVote() {
+            if (!isChairperson) {
+                showStatus('Only chairperson can give right to vote', true);
+                return;
+            }
+
+            const voterAddress = document.getElementById('voterAddress').value.trim();
+
+            // Enhanced address validation
+            if (!voterAddress) {
+                showStatus('Please enter an address', true);
+                return;
+            }
+
+            if (!ethers.utils.isAddress(voterAddress)) {
+                showStatus('Invalid Ethereum address format', true);
+                return;
+            }
+
+            try {
+                const tx = await contract.giveRightToVote(voterAddress);
+                showStatus('Processing transaction...');
+                await tx.wait();
+                showStatus('Successfully gave right to vote!');
+                document.getElementById('voterAddress').value = ''; // Clear input
+            } catch (error) {
+                console.error('Error giving right to vote:', error);
+                let errorMessage = error.message;
+                // Clean up the error message if it's too technical
+                if (errorMessage.includes('execution reverted')) {
+                    errorMessage = 'Transaction failed. The address might already have voting rights.';
+                }
+                showStatus('Failed: ' + errorMessage, true);
+            }
+        }
+
         async function initializeContract() {
             if (typeof window.ethereum !== 'undefined') {
                 try {
-                    // Verify user connection
                     const connectedAccount = localStorage.getItem('connectedAccount');
                     if (!connectedAccount) {
-                        window.location.href = 'connect.html';
+                        window.location.href = 'index.html';
                         return;
                     }
 
-                    // Setup provider and contract
                     const provider = new ethers.providers.Web3Provider(window.ethereum);
                     signer = await provider.getSigner();
                     contract = new ethers.Contract(contractAddress, abi, signer);
 
-                    // Initialize UI elements
                     displayUserInfo(connectedAccount);
+                    await checkIfChairperson(); // Add this line
                     await initializeProposals();
-                    startTimer(90 * 60); // 90 minutes
+                    await checkVotingStatus();
+                    startTimer(90 * 60);
 
                     await updateWinner();
-
-                    setInterval(updateWinner, 10000)
+                    setInterval(updateWinner, 10000);
 
                 } catch (error) {
                     console.error('Contract initialization error:', error);
@@ -484,7 +742,6 @@
             }
         }
 
-        // Setup proposal voting
         async function initializeProposals() {
             const buttons = document.querySelectorAll('.vote-button');
             buttons.forEach(button => {
@@ -495,7 +752,7 @@
             });
         }
 
-        // Handle voting
+
         async function vote(proposalId) {
             try {
                 const tx = await contract.vote(proposalId);
@@ -521,35 +778,81 @@
             }
         }
 
-        // Timer implementation
+
         function startTimer(duration) {
-            let timer = duration;
+            let endTime = localStorage.getItem('votingEndTime');
+
+            if (!endTime) {
+                endTime = Date.now() + (duration * 1000);
+                localStorage.setItem('votingEndTime', endTime);
+            }
+
             const display = document.querySelector('#timer');
 
-            const interval = setInterval(() => {
-                const minutes = parseInt(timer / 60, 10);
-                const seconds = parseInt(timer % 60, 10);
+            const interval = setInterval(async () => {
+                const now = Date.now();
+                const timeLeft = Math.max(0, Math.floor((endTime - now) / 1000));
 
-                display.textContent = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
-
-                if (--timer < 0) {
+                if (timeLeft === 0) {
                     clearInterval(interval);
                     display.textContent = "00:00";
 
-                    // Disable voting after timer expires
+
                     const voteButtons = document.querySelectorAll('.vote-button');
                     voteButtons.forEach(button => {
                         button.disabled = true;
                         button.textContent = 'Ended';
                     });
+
+
+                    try {
+                        const winnerName = await contract.winnerName();
+                        document.getElementById('overlayWinnerName').textContent = winnerName;
+                        document.getElementById('votingEndedOverlay').style.display = 'flex';
+                    } catch (error) {
+                        showStatus('Error getting winner: ' + error.message, true);
+                    }
+
+                    return;
                 }
+
+                const minutes = Math.floor(timeLeft / 60);
+                const seconds = timeLeft % 60;
+
+                display.textContent = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
             }, 1000);
         }
+        function closeOverlay() {
+            document.getElementById('votingEndedOverlay').style.display = 'none';
+        }
+        function resetVoting() {
+            localStorage.removeItem('votingEndTime');
+        }
+        async function checkVotingStatus() {
+            const endTime = localStorage.getItem('votingEndTime');
+            if (endTime && Date.now() >= parseInt(endTime)) {
+                const display = document.querySelector('#timer');
+                display.textContent = "00:00";
 
-        // Initialize on page load
+
+                const voteButtons = document.querySelectorAll('.vote-button');
+                voteButtons.forEach(button => {
+                    button.disabled = true;
+                    button.textContent = 'Ended';
+                });
+
+
+                try {
+                    const winnerName = await contract.winnerName();
+                    document.getElementById('overlayWinnerName').textContent = winnerName;
+                    document.getElementById('votingEndedOverlay').style.display = 'flex';
+                } catch (error) {
+                    showStatus('Error getting winner: ' + error.message, true);
+                }
+            }
+        }
         document.addEventListener('DOMContentLoaded', initializeContract);
 
-        // Handle MetaMask account changes
         if (window.ethereum) {
             window.ethereum.on('accountsChanged', (accounts) => {
                 if (accounts.length === 0) {
