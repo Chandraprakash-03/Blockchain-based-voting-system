@@ -8,389 +8,7 @@
     <link rel="shortcut icon" href="dependencies/logo.png" type="image/x-icon">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/ethers/5.7.2/ethers.umd.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/ethereum-blockies@0.1.1/blockies.min.js"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Afacad:ital,wght@0,400..700;1,400..700&display=swap"
-        rel="stylesheet">
-
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body,
-        html {
-            height: 100%;
-            font-family: "Afacad", Arial, Helvetica, sans-serif;
-            color: #000;
-        }
-
-        .container {
-            display: flex;
-            height: 100vh;
-            position: relative;
-        }
-
-        .left-bar {
-            background-color: #e74c3c;
-            width: 60px;
-            position: relative;
-        }
-
-        .top-bar {
-            background-color: #154360;
-            height: 60px;
-            width: 100%;
-        }
-
-        .main-content {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            flex-grow: 1;
-            background-color: #fdf6f0;
-            padding: 60px;
-            z-index: 1;
-        }
-
-        .header {
-            background-color: #4a148c;
-            height: 60px;
-            width: calc(100% - 60px);
-            position: absolute;
-            top: 0;
-            left: 60px;
-            z-index: 2;
-            display: flex;
-            /* Add this */
-            align-items: center;
-            /* Add this */
-            justify-content: flex-end;
-            /* Add this */
-            padding-right: 20px;
-            /* Add this */
-        }
-
-        .user-info {
-            display: flex;
-            align-items: center;
-            font-size: 14px;
-            color: white;
-            z-index: 10;
-            background-color: rgba(255, 255, 255, 0.1);
-            padding: 5px 10px;
-            border-radius: 20px;
-            backdrop-filter: blur(5px);
-            /* Remove position: absolute and top/right properties */
-        }
-
-        .user-info canvas {
-            margin-right: 10px;
-            border-radius: 4px;
-        }
-
-        .logo-container {
-            position: absolute;
-            top: 60px;
-            left: 60px;
-            padding: 10px;
-        }
-
-        .logo-container img {
-            width: 80px;
-            height: auto;
-        }
-
-        .timer-container {
-            position: absolute;
-            margin: -40px;
-            top: 120px;
-            right: 200px;
-        }
-
-        .timer-circle {
-            width: 70px;
-            height: 70px;
-            background-color: rgba(229, 89, 80, 0.35);
-            border-radius: 50%;
-            border: #4a148c 1px solid;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            font-size: 18px;
-            color: black;
-            font-weight: bold;
-        }
-
-        .proposal-container {
-            display: flex;
-            flex-direction: column;
-            height: 400px;
-            width: 400px;
-            background-color: rgba(71, 24, 120, 0.35);
-            border: solid 1px #4a148c;
-            border-radius: 10px;
-            padding: 20px;
-        }
-
-        .proposal-item {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            background-color: rgba(71, 24, 120, 0.35);
-            padding: 10px 15px;
-            margin: 10px 0;
-            border: solid 1px #4a148c;
-            border-radius: 5px;
-            flex: 1;
-        }
-
-        .proposal-name {
-            font-size: 18px;
-            font-weight: 500;
-        }
-
-        .vote-button {
-            padding: 8px 20px;
-            background-color: #e74c3c;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            font-family: "Afacad", Arial, Helvetica, sans-serif;
-            font-weight: 500;
-            transition: background-color 0.3s ease;
-        }
-
-        .vote-button:hover {
-            background-color: #c0392b;
-        }
-
-        .vote-button:disabled {
-            background-color: #cccccc;
-            cursor: not-allowed;
-        }
-
-        #status {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            width: 500px;
-            padding: 10px 20px;
-            border-radius: 5px;
-            display: none;
-            z-index: 10;
-            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.3);
-        }
-
-        .success {
-            background-color: #4CAF50;
-            color: white;
-        }
-
-        .error {
-            background-color: #f44336;
-            color: white;
-        }
-
-        .winner-container {
-            margin-top: 20px;
-            padding: 15px;
-            background-color: rgba(71, 24, 120, 0.35);
-            border: solid 1px #4a148c;
-            border-radius: 10px;
-            text-align: center;
-        }
-
-        .winner-container h2 {
-            color: #4a148c;
-            margin-bottom: 10px;
-            font-size: 20px;
-        }
-
-        #current-winner {
-            font-size: 18px;
-            font-weight: 500;
-            color: #e74c3c;
-        }
-
-        .overlay {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.8);
-            z-index: 1000;
-            justify-content: center;
-            align-items: center;
-        }
-
-        .overlay-content {
-            background-color: white;
-            padding: 40px;
-            border-radius: 15px;
-            text-align: center;
-            max-width: 500px;
-            width: 90%;
-            position: relative;
-            animation: slideIn 0.5s ease-out;
-        }
-
-        @keyframes slideIn {
-            from {
-                transform: translateY(-100px);
-                opacity: 0;
-            }
-
-            to {
-                transform: translateY(0);
-                opacity: 1;
-            }
-        }
-
-        .overlay-content h2 {
-            color: #4a148c;
-            margin-bottom: 20px;
-            font-size: 28px;
-        }
-
-        .winner-name {
-            color: #e74c3c;
-            font-size: 36px;
-            font-weight: bold;
-            margin: 20px 0;
-        }
-
-        .voting-ended-msg {
-            font-size: 18px;
-            color: #666;
-            margin-bottom: 20px;
-        }
-
-        .close-overlay {
-            padding: 10px 25px;
-            background-color: #4a148c;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 16px;
-            transition: background-color 0.3s;
-        }
-
-        .close-overlay:hover {
-            background-color: #311b92;
-        }
-
-        .user-info {
-            display: flex;
-            align-items: center;
-            font-size: 14px;
-            color: white;
-            z-index: 10;
-            background-color: rgba(255, 255, 255, 0.1);
-            padding: 5px 10px;
-            border-radius: 20px;
-            backdrop-filter: blur(5px);
-        }
-
-        .chairperson-badge {
-            background-color: #e74c3c;
-            color: white;
-            padding: 2px 8px;
-            border-radius: 12px;
-            font-size: 12px;
-            margin-left: 10px;
-        }
-
-        .admin-panel {
-            position: fixed;
-            top: 80px;
-            /* Positioned below the header */
-            right: 20px;
-            background-color: rgba(74, 20, 140, 0.95);
-            /* Made slightly more opaque */
-            padding: 25px;
-            border-radius: 10px;
-            color: white;
-            display: none;
-            /* Hidden by default */
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-            width: 300px;
-            /* Fixed width */
-            z-index: 100;
-            /* Ensure it's above other content */
-        }
-
-        .admin-panel h3 {
-            margin-bottom: 15px;
-            font-size: 20px;
-            color: #fff;
-            text-align: center;
-            font-weight: bold;
-        }
-
-        .admin-controls {
-            background-color: rgba(255, 255, 255, 0.1);
-            padding: 15px;
-            border-radius: 8px;
-            margin-top: 10px;
-        }
-
-        .admin-panel input {
-            width: 100%;
-            padding: 12px;
-            margin-bottom: 15px;
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            border-radius: 6px;
-            background-color: rgba(255, 255, 255, 0.9);
-            color: #333;
-            font-size: 14px;
-        }
-
-        .admin-panel input::placeholder {
-            color: #666;
-        }
-
-        .admin-panel button {
-            background-color: #e74c3c;
-            color: white;
-            border: none;
-            padding: 12px 20px;
-            border-radius: 6px;
-            cursor: pointer;
-            width: 100%;
-            font-size: 16px;
-            font-weight: bold;
-            transition: background-color 0.3s ease;
-        }
-
-        .admin-panel button:hover {
-            background-color: #c0392b;
-        }
-
-        .admin-toggle {
-            position: fixed;
-            top: 80px;
-            right: 10px;
-            background-color: #e74c3c;
-            color: white;
-            padding: 10px 20px;
-            border-radius: 5px;
-            cursor: pointer;
-            display: none;
-            /* Hidden by default */
-            z-index: 99;
-            border: none;
-            font-weight: bold;
-        }
-
-        .admin-toggle:hover {
-            background-color: #c0392b;
-        }
-    </style>
+    <link rel="stylesheet" href="vote.css">
 </head>
 
 <body>
@@ -640,10 +258,10 @@
             const userAddressSpan = document.getElementById('user-address');
             const blockyIconCanvas = document.getElementById('blocky-icon');
 
-            // Format address display
+
             userAddressSpan.textContent = `${address.slice(0, 6)}...${address.slice(-4)}`;
 
-            // Generate and display blocky icon
+
             const icon = blockies.create({
                 seed: address.toLowerCase(),
                 size: 8,
@@ -660,11 +278,11 @@
 
                 isChairperson = chairpersonAddress.toLowerCase() === currentUser.toLowerCase();
 
-                // Show/hide chairperson badge and admin toggle button
+
                 document.getElementById('chairperson-badge').style.display = isChairperson ? 'inline' : 'none';
                 document.getElementById('adminToggle').style.display = isChairperson ? 'block' : 'none';
 
-                // If user is not chairperson, ensure admin panel is hidden
+
                 if (!isChairperson) {
                     document.getElementById('adminPanel').style.display = 'none';
                 }
@@ -683,7 +301,7 @@
 
             const voterAddress = document.getElementById('voterAddress').value.trim();
 
-            // Enhanced address validation
+
             if (!voterAddress) {
                 showStatus('Please enter an address', true);
                 return;
@@ -699,11 +317,11 @@
                 showStatus('Processing transaction...');
                 await tx.wait();
                 showStatus('Successfully gave right to vote!');
-                document.getElementById('voterAddress').value = ''; // Clear input
+                document.getElementById('voterAddress').value = '';
             } catch (error) {
                 console.error('Error giving right to vote:', error);
                 let errorMessage = error.message;
-                // Clean up the error message if it's too technical
+
                 if (errorMessage.includes('execution reverted')) {
                     errorMessage = 'Transaction failed. The address might already have voting rights.';
                 }
@@ -725,7 +343,7 @@
                     contract = new ethers.Contract(contractAddress, abi, signer);
 
                     displayUserInfo(connectedAccount);
-                    await checkIfChairperson(); // Add this line
+                    await checkIfChairperson();
                     await initializeProposals();
                     await checkVotingStatus();
                     startTimer(90 * 60);
