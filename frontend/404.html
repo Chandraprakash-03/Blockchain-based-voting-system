@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>404 | Vote Right</title>
+  <link href="https://fonts.googleapis.com/css2?family=Afacad:ital,wght@0,400..700;1,400..700&display=swap"
+    rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body,
+    html {
+      height: 100%;
+      font-family: "Afacad", Arial, Helvetica, sans-serif;
+      color: #000;
+    }
+
+    .container {
+      display: flex;
+      height: 100vh;
+      position: relative;
+    }
+
+    .left-bar {
+      background-color: #e74c3c;
+      width: 60px;
+      position: relative;
+    }
+
+    .top-bar {
+      background-color: #154360;
+      height: 60px;
+      width: 100%;
+    }
+
+    .main-content {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-grow: 1;
+      background-color: #fdf6f0;
+      padding: 60px;
+      z-index: 1;
+    }
+
+    .header {
+      background-color: #4a148c;
+      height: 60px;
+      width: calc(100% - 60px);
+      position: absolute;
+      top: 0;
+      left: 60px;
+      z-index: 2;
+    }
+
+    .error-container {
+      background-color: rgba(71, 24, 120, 0.35);
+      border: solid 1px #4a148c;
+      border-radius: 10px;
+      padding: 40px;
+      max-width: 500px;
+      width: 90%;
+      text-align: center;
+    }
+
+    .error-code {
+      color: #e74c3c;
+      font-size: 64px;
+      font-weight: bold;
+      margin-bottom: 20px;
+    }
+
+    .error-title {
+      color: #4a148c;
+      font-size: 32px;
+      margin-bottom: 20px;
+    }
+
+    .error-message {
+      color: #333;
+      font-size: 16px;
+      line-height: 1.6;
+      margin-bottom: 30px;
+    }
+
+    .error-details {
+      background-color: rgba(71, 24, 120, 0.15);
+      padding: 20px;
+      border-radius: 8px;
+      margin-top: 20px;
+    }
+
+    .error-details h3 {
+      color: #4a148c;
+      font-size: 18px;
+      margin-bottom: 10px;
+    }
+
+    .error-details p {
+      color: #666;
+      font-size: 14px;
+      line-height: 1.5;
+    }
+
+    .home-button {
+      display: inline-block;
+      padding: 12px 30px;
+      background-color: #e74c3c;
+      color: white;
+      text-decoration: none;
+      border-radius: 5px;
+      font-weight: 500;
+      margin-top: 20px;
+      transition: background-color 0.3s ease;
+    }
+
+    .home-button:hover {
+      background-color: #c0392b;
+    }
+
+    code {
+      background-color: rgba(231, 76, 60, 0.1);
+      padding: 2px 6px;
+      border-radius: 3px;
+      font-family: monospace;
+      color: #e74c3c;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <div class="left-bar">
+      <div class="top-bar"></div>
+    </div>
+    <div class="header"></div>
+    <div class="main-content">
+      <div class="error-container">
+        <div class="error-code">404</div>
+        <h1 class="error-title">Page Not Found</h1>
+        <p class="error-message">The specified file was not found on this website. Please check the URL for mistakes and
+          try again.</p>
+        <a href="/" class="home-button">Return Home</a>
+        <div class="error-details">
+          <h3>Need Help?</h3>
+          <p>If you believe this is an error, please ensure you're connected to MetaMask and have the correct voting
+            rights. You can also check our documentation or contact support for assistance.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+
+</html>

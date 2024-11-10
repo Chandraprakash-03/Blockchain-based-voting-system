@@ -21,3 +21,5 @@ frontend/dependencies
 
 .env
 
+.firebaserc
+firebase.json
