@@ -1,4 +1,4 @@
-# Vote Right - Decentralized Voting Application
+# Vote Rigt - Decentralized Voting Application
 
 A blockchain-based voting system built with Solidity and Ethereum, featuring a clean and intuitive web interface for transparent and secure voting.
 
