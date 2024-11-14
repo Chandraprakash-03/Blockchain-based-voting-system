@@ -2,7 +2,7 @@
  *Submitted for verification at Etherscan.io on 2024-09-14
  */
 
-// SPDX-License-Identifier: MIT
+// SPDX-License-Identifier: SEE LICENSE IN LICENSE
 
 pragma solidity >=0.7.0 <0.9.0;
 
